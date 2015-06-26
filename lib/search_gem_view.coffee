@@ -11,7 +11,7 @@ class SearchGemView extends SelectListView
    # [todo] several directories?
    @projectPath = atom.project.getDirectories()[0].path
    @gemfile = "#{@projectPath}/Gemfile.lock"
-   @getGemsCommand = "cd #{@projectPath} && bundle show | cut -d \" \" -f 4 | sed 1d"
+   @getGemsCommand = "cd #{@projectPath} && bundle show | cut -d \" \" -f 4,5,6 | sed 1d"
    @setMaxItems(20)
  show: ->
    @addClass('overlay from-top')
@@ -40,7 +40,7 @@ class SearchGemView extends SelectListView
  viewForItem: (item) ->
    "<li>#{item}</li>"
  confirmed: (item) ->
-   exec "cd #{@projectPath} && bundle show #{item}", (err, stdout, stderr)=>
+   exec "cd #{@projectPath} && bundle show #{item.split(" ")[0]}", (err, stdout, stderr)=>
      atom.open(pathsToOpen: [stdout]);
    @hide()
 
