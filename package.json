@@ -1,7 +1,7 @@
 {
   "name": "gemsource",
   "main": "./lib/gemsource",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Simple package to open source of installed ruby gems from atom",
   "keywords": [],
   "activationCommands": {
