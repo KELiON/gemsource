@@ -11,7 +11,6 @@ class SearchGemView extends SelectListView
    # [todo] several directories?
    @projectPath = atom.project.getDirectories()[0].path
    @gemfile = "#{@projectPath}/Gemfile.lock"
-   @getGemsCommand = "cd #{@projectPath} && bundle show | cut -d \" \" -f 4 | sed 1d"
    @setMaxItems(20)
  show: ->
    @addClass('overlay from-top')
@@ -34,12 +33,14 @@ class SearchGemView extends SelectListView
     # [todo] show error dialog
  getGems: (callback)->
    return callback(cache) if cache
-   exec @getGemsCommand, (err, stdout, stderr)=>
-     cache = stdout.split("\n")
+   exec "cd #{@projectPath} && bundle show", (err, stdout, stderr)=>
+     cache = stdout.split("\n").map (gem)->
+       gem.replace(/^[^\w\d]+/g, '')
      callback(cache)
  viewForItem: (item) ->
    "<li>#{item}</li>"
  confirmed: (item) ->
+   item = item.replace(/\s\([\d\.]+\)$/, '')
    exec "cd #{@projectPath} && bundle show #{item}", (err, stdout, stderr)=>
      atom.open(pathsToOpen: [stdout]);
    @hide()
