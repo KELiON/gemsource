@@ -40,7 +40,7 @@ class SearchGemView extends SelectListView
  viewForItem: (item) ->
    "<li>#{item}</li>"
  confirmed: (item) ->
-   item = item.replace(/\s\([\d\.]+\)$/, '')
+   item = item.replace(/\s\(.*?\)$/, '')
    exec "cd #{@projectPath} && bundle show #{item}", (err, stdout, stderr)=>
      atom.open(pathsToOpen: [stdout]);
    @hide()
