@@ -31,17 +31,19 @@ class SearchGemView extends SelectListView
        @setItems(list)
    else
     # [todo] show error dialog
- getGems: (callback)->
+ getGems: (callback, bundleCommand = "bundle")->
    return callback(cache) if cache
-   exec "cd #{@projectPath} && bundle show", (err, stdout, stderr)=>
+   exec "cd #{@projectPath} && #{bundleCommand} show", (err, stdout, stderr)=>
+     return @getGems(callback, "bin/bundle") if err
      cache = stdout.split("\n").map (gem)->
        gem.replace(/^[^\w\d]+/g, '')
      callback(cache)
  viewForItem: (item) ->
    "<li>#{item}</li>"
- confirmed: (item) ->
+ confirmed: (item, bundleCommand = "bundle") ->
    item = item.replace(/\s\(.*?\)$/, '')
-   exec "cd #{@projectPath} && bundle show #{item}", (err, stdout, stderr)=>
+   exec "cd #{@projectPath} && #{bundleCommand} show #{item}", (err, stdout, stderr)=>
+     return @confirmed(item, "bin/bundle") if err
      atom.open(pathsToOpen: [stdout]);
    @hide()
 
