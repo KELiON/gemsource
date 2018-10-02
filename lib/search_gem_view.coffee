@@ -34,7 +34,7 @@ class SearchGemView extends SelectListView
  getGems: (callback, bundleCommand = "bundle")->
    return callback(cache) if cache
    exec "cd #{@projectPath} && #{bundleCommand} show", (err, stdout, stderr)=>
-     return @getGems(callback, "bin/bundle") if err
+     return @getGems(callback, "bin/bundle") if err and bundleCommand != "bin/bundle"
      cache = stdout.split("\n").map (gem)->
        gem.replace(/^[^\w\d]+/g, '')
      callback(cache)
@@ -43,7 +43,7 @@ class SearchGemView extends SelectListView
  confirmed: (item, bundleCommand = "bundle") ->
    item = item.replace(/\s\(.*?\)$/, '')
    exec "cd #{@projectPath} && #{bundleCommand} show #{item}", (err, stdout, stderr)=>
-     return @confirmed(item, "bin/bundle") if err
+     return @confirmed(item, "bin/bundle") if err and bundleCommand != "bin/bundle"
      atom.open(pathsToOpen: [stdout]);
    @hide()
 
